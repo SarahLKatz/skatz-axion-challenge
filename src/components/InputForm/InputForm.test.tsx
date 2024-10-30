@@ -1,11 +1,52 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { InputForm } from ".";
 import { expect, vi } from "vitest";
+import axios from "axios";
 
 describe("InputForm", () => {
-  it("renders", () => {
-    render(<InputForm setData={vi.fn()} />);
-    expect(screen.getByLabelText(/Username/)).toBeVisible();
+  const setup = (mockSetData = vi.fn()) =>
+    render(<InputForm setData={mockSetData} />);
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
-  // TODO: More tests
+
+  it("show expected fields", () => {
+    setup();
+    expect(screen.getByText("Username or organization")).toBeVisible();
+    expect(screen.getByLabelText("Username")).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Search Repositories" })
+    ).toBeVisible();
+  });
+
+  it("clicking submit calls the github api and uses the result to call the passed in setData function", async () => {
+    const mockSetData = vi.fn();
+    const mockData = [
+      {
+        description: "A repository",
+        html_url: "http://www.github.com/fake-user/fakeRepo",
+        id: 123456,
+        name: "fakeRepo",
+        owner: {
+          html_url: "http://www.github.com/fake-user",
+          login: "fake-user",
+        },
+      },
+    ];
+    const axiosSpy = vi.spyOn(axios, "get");
+    axiosSpy.mockImplementationOnce(async () => ({ data: mockData }));
+    setup(mockSetData);
+    userEvent.type(screen.getByLabelText("Username"), "fake-user");
+    userEvent.click(
+      screen.getByRole("button", { name: "Search Repositories" })
+    );
+    await waitFor(() => {
+      expect(axiosSpy).toHaveBeenCalledWith(
+        "https://api.github.com/users/fake-user/repos"
+      );
+    });
+    expect(mockSetData).toHaveBeenCalledWith(mockData);
+  });
 });

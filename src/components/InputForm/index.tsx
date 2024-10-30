@@ -15,6 +15,7 @@ export const InputForm = ({ setData }: InputFormProps) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username");
+    // Check that username exists
 
     try {
       // TODO: Only works for usernames - need to update to work for org (maybe add a checkbox to see which it is)
@@ -31,11 +32,9 @@ export const InputForm = ({ setData }: InputFormProps) => {
   return (
     <div className="input-form">
       <form onSubmit={fetchRepositories} className="form-container">
-        <label htmlFor="username">
-          <Typography variant="body1" component="span">
-            Username or organization
-          </Typography>
-        </label>
+        <Typography variant="body1" component="span">
+          Username or organization
+        </Typography>
         <TextField
           hiddenLabel
           id="outlined-basic"
