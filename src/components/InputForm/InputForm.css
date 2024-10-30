@@ -1,0 +1,13 @@
+.input-form {
+  margin: 32px;
+}
+
+.form-container {
+  /* display: flex;
+  flex-direction: column;
+  justify-content: flex-start; */
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: max-content;
+  gap: 8px;
+}

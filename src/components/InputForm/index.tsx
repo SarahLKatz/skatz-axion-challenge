@@ -1,6 +1,10 @@
 import axios from "axios";
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import type { GitHubRepository } from "../../types";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import "./InputForm.css";
 
 type InputFormProps = {
   setData: Dispatch<SetStateAction<GitHubRepository[]>>;
@@ -13,6 +17,7 @@ export const InputForm = ({ setData }: InputFormProps) => {
     const username = formData.get("username");
 
     try {
+      // TODO: Only works for usernames - need to update to work for org (maybe add a checkbox to see which it is)
       const res = await axios.get(
         `https://api.github.com/users/${username}/repos`
       );
@@ -24,12 +29,24 @@ export const InputForm = ({ setData }: InputFormProps) => {
   };
 
   return (
-    <>
-      <form onSubmit={fetchRepositories}>
-        <label htmlFor="username">Username or organization</label>
-        <input type="text" name="username" />
-        <button type="submit">Search Repositories</button>
+    <div className="input-form">
+      <form onSubmit={fetchRepositories} className="form-container">
+        <label htmlFor="username">
+          <Typography variant="body1" component="span">
+            Username or organization
+          </Typography>
+        </label>
+        <TextField
+          hiddenLabel
+          id="outlined-basic"
+          label="Username"
+          variant="outlined"
+          name="username"
+        />
+        <Button variant="contained" type="submit">
+          Search Repositories
+        </Button>
       </form>
-    </>
+    </div>
   );
 };

@@ -13,29 +13,30 @@
   - Vite because it's fast development experience (and I'm used to it)
 - Installed `react-testing-library`, as it's a commonly used testing library that allows testing user flows and user behavior. Used `vitest` as the test runner, since it is fast and compatible with Vite
 - Used `axios` for data fetching. In an ideal world, I might first investigate whether a query library is a better fit, especially if we need to do any caching, but since this is only calling one API and I'm very familiar with axios, I made the decision to go with the simpler library here
-
-MATERIAL UI
-
-[- Used `React Hook Form` for the form and validation. It's a library I've worked with extensively and while this is a fairly simple form (and could easily have been done with React), I find RHF to be useful for controlled inputs]
+- Used `Material UI` for easy components. Ideally I would work with my project's design system, but material UI allows for quickly importing components based on Google's Material Design
 
 ### Component Structure
 
-TODO
+- The page-level code lives in `App.tsx`. Individual components imported by this page live in the `components` folder.
+- I decided to separate the input form into its own component, even though it is very small, because it is its own distinct unit. Form state is managed inside the form, and a state-setter function is passed as a prop to allow the API response to update the data in the parent component.
+- Basic building block components (buttons, tables, etc) are imported from Material UI
 
 ## Next Steps - ADD (future features)
 
 ## Time Log
 
 - 10/29: 15 minutes - setup and planning
-- 10/29:
+- 10/29: 50 minutes work
 
 ## DELETE LATER - SLK TO-DO
 
-- Create a form (RHF?)
-  - Inputs: username/org
-  - LATER: Style inputs/shared components
-- Allow form submission
-- On submit, call github api
+NEXT: Tests for input form
+
+- Create a form :white_check_mark:
+  - Inputs: username/org :white_check_mark:
+  - LATER: Style inputs/shared components :white_check_mark:
+- Allow form submission :white_check_mark:
+- On submit, call github api :white_check_mark:
 - Display repository list
 - Pagination
 - Sorting & Filtering

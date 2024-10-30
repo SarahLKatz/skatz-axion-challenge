@@ -5,7 +5,6 @@ import { DataTable } from "./components/DataTable";
 import type { GitHubRepository } from "./types";
 
 function App() {
-  // TODO: Type
   const [repositoryData, setRepositoryData] = useState<GitHubRepository[]>([]);
   return (
     <>
