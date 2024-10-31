@@ -22,8 +22,12 @@ function App() {
       );
       setRepositoryData(res.data);
     } catch (err) {
-      console.error("Oops", err);
-      // TODO: Error handling
+      {
+        /** TODO: Error handling
+         * Surface a meaningful error on the page when there is a non-200 response from the API
+         */
+      }
+      console.error("Error on repository fetch", err);
     }
   };
 
