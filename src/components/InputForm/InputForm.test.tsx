@@ -1,19 +1,20 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { InputForm } from ".";
 import { expect, vi } from "vitest";
-import axios from "axios";
+import { InputForm } from ".";
 
 describe("InputForm", () => {
-  const setup = (mockSetData = vi.fn()) =>
-    render(<InputForm setData={mockSetData} />);
+  const setup = ({ mockFetchData = vi.fn(), mockUpdateFilters = vi.fn() }) =>
+    render(
+      <InputForm fetchData={mockFetchData} updateFilters={mockUpdateFilters} />
+    );
 
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
   it("show expected fields", () => {
-    setup();
+    setup({});
     expect(screen.getByText("Username or organization")).toBeVisible();
     expect(screen.getByLabelText("Username")).toBeVisible();
     expect(
@@ -21,24 +22,10 @@ describe("InputForm", () => {
     ).toBeVisible();
   });
 
-  it("clicking submit calls the github api and uses the result to call the passed in setData function", async () => {
-    const mockSetData = vi.fn();
-    const mockData = [
-      {
-        description: "A repository",
-        html_url: "http://www.github.com/fake-user/fakeRepo",
-        id: 123456,
-        name: "fakeRepo",
-        owner: {
-          html_url: "http://www.github.com/fake-user",
-          login: "fake-user",
-        },
-      },
-    ];
+  it("clicking submit passed-in data fetching and update filter functions", async () => {
+    const mockFetchData = vi.fn();
     const mockSearchTerm = "fake-user";
-    const axiosSpy = vi.spyOn(axios, "get");
-    axiosSpy.mockImplementationOnce(async () => ({ data: mockData }));
-    setup(mockSetData);
+    setup({ mockFetchData });
     const usernameField = screen.getByLabelText("Username");
     userEvent.type(usernameField, mockSearchTerm);
     await waitFor(() => {
@@ -48,18 +35,16 @@ describe("InputForm", () => {
       screen.getByRole("button", { name: "Search Repositories" })
     );
     await waitFor(() => {
-      expect(axiosSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          `https://api.github.com/users/${mockSearchTerm}/repos`
-        )
+      expect(mockFetchData).toHaveBeenCalledWith(
+        expect.objectContaining({ username: mockSearchTerm }),
+        1
       );
     });
-    expect(mockSetData).toHaveBeenCalledWith(mockData);
   });
 
   test.each([
     {
-      fieldName: "type",
+      fieldName: "repoType",
       labelText: "Repository type",
       optionToSelect: "owner",
     },
@@ -69,10 +54,10 @@ describe("InputForm", () => {
       optionToSelect: "pushed",
     },
   ])(
-    "updating filter options for $labelText changes the options sent to the api",
+    "updating filter options for $labelText updates the filters",
     async ({ fieldName, labelText, optionToSelect }) => {
-      const axiosSpy = vi.spyOn(axios, "get");
-      setup();
+      const mockUpdateFilters = vi.fn();
+      setup({ mockUpdateFilters });
       userEvent.type(await screen.findByLabelText("Username"), "name");
       const formField = await screen.findByLabelText(labelText);
       userEvent.click(formField);
@@ -83,8 +68,8 @@ describe("InputForm", () => {
         await screen.findByRole("button", { name: "Search Repositories" })
       );
       await waitFor(() => {
-        expect(axiosSpy).toHaveBeenCalledWith(
-          expect.stringContaining(`${fieldName}=${optionToSelect}`)
+        expect(mockUpdateFilters).toHaveBeenCalledWith(
+          expect.objectContaining({ [fieldName]: optionToSelect })
         );
       });
     }

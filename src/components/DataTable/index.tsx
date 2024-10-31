@@ -13,7 +13,12 @@ type DataTableProps = {
 };
 
 export const DataTable = ({ repositories }: DataTableProps) => {
-  // TODO: Add loading state
+  {
+    /* Empty State Improvements:
+     * Add separate states for "no valid search" vs "user has no repositories"
+     * Add a loading state while the search is occurring
+     */
+  }
   if (repositories.length === 0) {
     return <div>No repositories available</div>;
   }
@@ -41,6 +46,10 @@ export const DataTable = ({ repositories }: DataTableProps) => {
           </TableBody>
         </Table>
       </TableContainer>
+      {/** TODO: Pagination
+       * Add pages (potentially use a material-ui component?)
+       * On clicking a page, call `onPageUpdate` with the page nuber
+       */}
     </>
   );
 };
