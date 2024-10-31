@@ -1,20 +1,17 @@
 import axios from "axios";
-import {
-  useState,
-  type Dispatch,
-  type FormEvent,
-  type SetStateAction,
-} from "react";
-import type { GitHubRepository } from "../../types";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import "./InputForm.css";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import InputLabel from "@mui/material/InputLabel";
-import { FormLabel, MenuItem, Select } from "@mui/material";
 import { useForm } from "react-hook-form";
+import "./InputForm.css";
+import type { GitHubRepository } from "../../types";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormLabel from "@mui/material/FormLabel";
 
 type InputFormProps = {
   setData: Dispatch<SetStateAction<GitHubRepository[]>>;
