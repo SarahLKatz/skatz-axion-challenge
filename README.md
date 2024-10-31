@@ -38,7 +38,7 @@
 
 ## DELETE LATER - SLK TO-DO
 
-NEXT: Table tests, fix api call (add check for username, fix for orgs), pagination
+NEXT: fix api call (add check for username, fix for orgs), pagination
 
 - Create a form :white_check_mark:
   - Inputs: username/org :white_check_mark:
@@ -53,4 +53,5 @@ NEXT: Table tests, fix api call (add check for username, fix for orgs), paginati
   - Submit calls the api and returns a response :white_check_mark:
   - Pagination calls the api again
   - Sort and filter
+  - Display repos :white_check_mark:
 - Readme
