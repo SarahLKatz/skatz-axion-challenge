@@ -35,16 +35,21 @@ describe("InputForm", () => {
         },
       },
     ];
+    const mockSearchTerm = "fake-user";
     const axiosSpy = vi.spyOn(axios, "get");
     axiosSpy.mockImplementationOnce(async () => ({ data: mockData }));
     setup(mockSetData);
-    userEvent.type(screen.getByLabelText("Username"), "fake-user");
+    const usernameField = screen.getByLabelText("Username");
+    userEvent.type(usernameField, mockSearchTerm);
+    await waitFor(() => {
+      expect(usernameField).toHaveDisplayValue(mockSearchTerm);
+    });
     userEvent.click(
       screen.getByRole("button", { name: "Search Repositories" })
     );
     await waitFor(() => {
       expect(axiosSpy).toHaveBeenCalledWith(
-        "https://api.github.com/users/fake-user/repos"
+        `https://api.github.com/users/${mockSearchTerm}/repos`
       );
     });
     expect(mockSetData).toHaveBeenCalledWith(mockData);

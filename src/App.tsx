@@ -7,10 +7,10 @@ import type { GitHubRepository } from "./types";
 function App() {
   const [repositoryData, setRepositoryData] = useState<GitHubRepository[]>([]);
   return (
-    <>
+    <div className="container">
       <InputForm setData={setRepositoryData} />
       <DataTable repositories={repositoryData} />
-    </>
+    </div>
   );
 }
 
