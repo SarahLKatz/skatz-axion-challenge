@@ -7,43 +7,19 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import InputLabel from "@mui/material/InputLabel";
 import { useForm } from "react-hook-form";
+import { DirectionType, RepoType, SortType } from "../../constants";
 import "./InputForm.css";
-import type { GitHubRepository } from "../../types";
+import type { GitHubRepository, SearchFormValues } from "../../types";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormLabel from "@mui/material/FormLabel";
 
 type InputFormProps = {
   setData: Dispatch<SetStateAction<GitHubRepository[]>>;
+  updateFilters: Dispatch<SetStateAction<SearchFormValues>>;
 };
 
-const RepoType = {
-  ALL: "all",
-  OWNER: "owner",
-  MEMBER: "member",
-} as const;
-
-const SortType = {
-  CREATED: "created",
-  UPDATED: "updated",
-  PUSHED: "pushed",
-  FULL_NAME: "full_name",
-} as const;
-
-const DirectionType = {
-  ASC: "asc",
-  DESC: "desc",
-} as const;
-
-type FormValues = {
-  username: string;
-  repoType: (typeof RepoType)[keyof typeof RepoType];
-  sort: (typeof SortType)[keyof typeof SortType];
-  direction: (typeof DirectionType)[keyof typeof DirectionType];
-  perPage?: number;
-};
-
-export const InputForm = ({ setData }: InputFormProps) => {
+export const InputForm = ({ setData, updateFilters }: InputFormProps) => {
   const [error, setError] = useState("");
 
   const defaultValues = {
@@ -54,7 +30,7 @@ export const InputForm = ({ setData }: InputFormProps) => {
     perPage: 30,
   };
 
-  const { register, handleSubmit, watch } = useForm<FormValues>({
+  const { register, handleSubmit, watch } = useForm<SearchFormValues>({
     defaultValues,
     mode: "all",
   });
@@ -62,7 +38,7 @@ export const InputForm = ({ setData }: InputFormProps) => {
   const repoTypeValue = watch("repoType");
   const sortTypeValue = watch("sort");
 
-  const fetchRepositories = async (values: FormValues) => {
+  const fetchRepositories = async (values: SearchFormValues) => {
     const { username, repoType, sort, direction, perPage } = values;
     if (!username) {
       setError("Must enter username or organization");
@@ -76,6 +52,7 @@ export const InputForm = ({ setData }: InputFormProps) => {
         }`
       );
       setData(res.data);
+      updateFilters(values);
     } catch (err) {
       console.error("Oops", err);
       // TODO: Error handling

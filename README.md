@@ -21,24 +21,29 @@
 ### Component Structure
 
 - The page-level code lives in `App.tsx`. Individual components imported by this page live in the `components` folder.
-- I decided to separate the input form into its own component, even though it is very small, because it is its own distinct unit. Form state is managed inside the form, and a state-setter function is passed as a prop to allow the API response to update the data in the parent component.
+- FORM INFO!
 - Basic building block components (buttons, tables, etc) are imported from Material UI
 
 ### Technical Challenges
 
-- One of the biggest challenges I had was setting up vitest correctly. While I've worked with vitest before, there is a lot of configuration needed to get it working correctly, and I ran into some trouble there. Using any other test runner would have been a
+- One of the biggest challenges I had was setting up vitest correctly. While I've worked with vitest before, there is a lot of configuration needed to get it working correctly, and I ran into some trouble there. This would have been a similar issue with any test runner, so I didn't think the trouble was worth changing the test runner.
+- FORM LIBRARY
 
 ## Next Steps - ADD (future features)
+
+- ADDITIONAL TESTS (SEE)
+- BETTER STYLING
 
 ## Time Log
 
 - 10/29: 15 minutes - setup and planning
 - 10/29: 50 minutes work
 - 10/30: 55 minutes work
+- 10/31: 75 minutes work
 
 ## DELETE LATER - SLK TO-DO
 
-NEXT: fix api call (add check for username, fix for orgs), pagination
+NEXT: Hoist filters to parent, pagination, fix readme
 
 - Create a form :white_check_mark:
   - Inputs: username/org :white_check_mark:
