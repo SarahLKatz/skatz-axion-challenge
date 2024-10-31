@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -7,31 +6,28 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import InputLabel from "@mui/material/InputLabel";
 import { useForm } from "react-hook-form";
-import { DirectionType, RepoType, SortType } from "../../constants";
+import {
+  defaultSearchValues,
+  DirectionType,
+  RepoType,
+  SortType,
+} from "../../constants";
 import "./InputForm.css";
-import type { GitHubRepository, SearchFormValues } from "../../types";
+import type { SearchFormValues } from "../../types";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormLabel from "@mui/material/FormLabel";
 
 type InputFormProps = {
-  setData: Dispatch<SetStateAction<GitHubRepository[]>>;
+  fetchData: (filters: SearchFormValues, page: number) => void;
   updateFilters: Dispatch<SetStateAction<SearchFormValues>>;
 };
 
-export const InputForm = ({ setData, updateFilters }: InputFormProps) => {
+export const InputForm = ({ fetchData, updateFilters }: InputFormProps) => {
   const [error, setError] = useState("");
 
-  const defaultValues = {
-    username: "",
-    repoType: RepoType.ALL,
-    sort: SortType.FULL_NAME,
-    direction: DirectionType.ASC,
-    perPage: 30,
-  };
-
   const { register, handleSubmit, watch } = useForm<SearchFormValues>({
-    defaultValues,
+    defaultValues: defaultSearchValues,
     mode: "all",
   });
 
@@ -39,24 +35,13 @@ export const InputForm = ({ setData, updateFilters }: InputFormProps) => {
   const sortTypeValue = watch("sort");
 
   const fetchRepositories = async (values: SearchFormValues) => {
-    const { username, repoType, sort, direction, perPage } = values;
+    const { username } = values;
     if (!username) {
       setError("Must enter username or organization");
       return;
     }
-
-    try {
-      const res = await axios.get(
-        `https://api.github.com/users/${username}/repos?type=${repoType}&sort=${sort}&direction=${direction}&per_page=${
-          perPage || 30
-        }`
-      );
-      setData(res.data);
-      updateFilters(values);
-    } catch (err) {
-      console.error("Oops", err);
-      // TODO: Error handling
-    }
+    await fetchData(values, 1);
+    updateFilters(values);
   };
 
   return (

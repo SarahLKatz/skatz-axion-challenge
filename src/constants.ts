@@ -15,3 +15,11 @@ export const DirectionType = {
   ASC: "asc",
   DESC: "desc",
 } as const;
+
+export const defaultSearchValues = {
+  username: "",
+  repoType: RepoType.ALL,
+  sort: SortType.FULL_NAME,
+  direction: DirectionType.ASC,
+  perPage: 30,
+};
